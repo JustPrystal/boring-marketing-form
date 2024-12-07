@@ -1,0 +1,21 @@
+.form-1{
+    padding: 50px 20px;
+    .inner{
+        max-width: 1280px;
+        margin: 0 auto;
+        .form-wrap{
+            .form{
+                display: flex;
+                flex-direction: column;
+                .input{
+                    padding: 15px;
+                    margin-bottom: 35px;
+                }
+                .submit-btn{
+                    padding: 20px;
+                }
+            }
+
+        }
+    }
+}

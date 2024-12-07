@@ -1,0 +1,38 @@
+
+* {
+    outline:none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  sup, sub {
+    vertical-align: baseline;
+    position: relative;
+    top: -0.4em;
+  }
+  sub { 
+    top: 0.4em; 
+  }
+
+html, body { 
+    margin:0;
+    padding:0;
+    overflow-x:hidden;
+}
+body {
+    position:relative;
+    width: 100%;
+
+}
+img, svg{
+  display:block;
+}
+*, :after, :before{
+  box-sizing:border-box;
+  margin: 0;
+  padding: 0;
+}
+a{
+  text-decoration:none;
+  display:inline-block;
+}
+
