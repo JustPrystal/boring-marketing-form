@@ -35,4 +35,6 @@ a{
   text-decoration:none;
   display:inline-block;
 }
-
+input::placeholder{
+  color: black;
+}
