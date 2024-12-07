@@ -52,12 +52,14 @@ export default function Form() {
                         <form className="form" onSubmit={methods.handleSubmit(onSubmit)}>
                             {tab === 0 && (
                                 <>
+                                    <label className="input-label" for="html">Enter Url</label>
                                     <RHFTextfield
-                                        className="input"
+                                        className="input url-input"
                                         name="url"
                                         placeholder="Enter URL"
                                         label='Enter URL'
                                     />
+                                    <label className="input-label" for="html">Enter Email</label>
                                     <RHFTextfield
                                         className="input email-input"
                                         name="email"
@@ -78,9 +80,9 @@ export default function Form() {
                                         label='Enter URL'
                                     />
                                     <RHFTextfield
-                                        className="input email-input"
-                                        name="email"
-                                        placeholder="Your Email"
+                                        className="input company-name-input"
+                                        name="name"
+                                        placeholder="Enter company name"
                                     />
                                     <RHFSelect className='input' name='select' placeholder='placeholder' options={array}/>
                                     <button type="submit" className="submit-btn">

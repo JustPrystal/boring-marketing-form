@@ -1,18 +1,48 @@
 .form-1{
     padding: 50px 20px;
+    background-color: var(--darkBrown);
     .inner{
         max-width: 1280px;
         margin: 0 auto;
         .form-wrap{
+            display: flex;
+            justify-content: center;
             .form{
                 display: flex;
                 flex-direction: column;
+                max-width: 600px;
+                width: 100%;
+                .input-label{
+                    padding: 24px 0 4px;
+                    font-size: 16px;
+                    font-family: "Inter", sans-serif;
+                    font-weight: 500;
+                    color: var(--white);
+                }
                 .input{
-                    padding: 15px;
-                    margin-bottom: 35px;
+                    padding: 8px 12px;
+                    margin-bottom: 4px;
+                    border: 1px solid var(--lightBlack);
+                    border-radius: 8px;
+                    min-height: 48px;
                 }
                 .submit-btn{
-                    padding: 20px;
+                    color: var(--buttonBrown);
+                    text-transform: uppercase;
+                    cursor: pointer;
+                    background-color: var(--offWhite);
+                    justify-content: center;
+                    align-items: center;
+                    width: 100%;
+                    margin-top: 48px;
+                    padding: 16px 0;
+                    font-weight: 700;
+                    display: flex;
+                    font-family: "Inter", sans-serif;
+                    line-height: 1.5;
+                    font-size: 16px;
+                    border: none;   
+
                 }
             }
 
