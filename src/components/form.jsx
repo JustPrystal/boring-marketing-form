@@ -102,16 +102,10 @@ export default function Form() {
                                         label='Enter Full Name'
                                     />
                                     <RHFTextfield
-<<<<<<< HEAD
                                         className="input email-input"
                                         name="company"
                                         placeholder="Ex; Boring Marketing .Co Ltd"
                                         label='Enter Company Name'
-=======
-                                        className="input company-name-input"
-                                        name="name"
-                                        placeholder="Enter company name"
->>>>>>> origin/main
                                     />
                                     <RHFSelect className='input' name='goal' placeholder="Your Team's Goals" options={selectItems} label='2025 Organic Growth goal' />
                                     <RHFTextfield className='input' name="revenue" placeholder="Enter Revenue Amount" label='Estimated growth budget / month' />
