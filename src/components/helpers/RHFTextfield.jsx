@@ -7,17 +7,19 @@ export default function RHFTextfield({ name, className, placeholder, label }) {
     } = useFormContext(); // Access register and errors from the form context
 
     return (
-        <>  
-            <label className="input-label" for='name'>{label}</label>
-            <input
-                className={className}
-                {...register(name)} // Properly register the input
-                placeholder={placeholder}
-                type="text"
-                id={name}
-                style={{ width: '100%' }}
-            />
-            {errors[name] && <p className="error-message">{errors[name]?.message}</p>} {/* Dynamically display errors */}
+        <>
+            <div className="form-group" style={{ margin: '0 0 15px 0' }}>
+                <label className="input-label" for='name'>{label}</label>
+                <input
+                    className={className}
+                    {...register(name)}
+                    placeholder={placeholder}
+                    type="text"
+                    id={name}
+                    style={{ width: '100%', padding: '15px' }}
+                />
+                {errors[name] && <p className="error-message" style={{ color: '#cc0000' }}>{errors[name]?.message}</p>}
+            </div>
         </>
     );
 }
