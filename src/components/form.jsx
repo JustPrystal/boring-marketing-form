@@ -28,13 +28,14 @@ export default function Form() {
     });
 
     const onSubmit = (data) => {
-        console.log(data);
+        
         switch (tab) {
             case 0:
                 setTab(1);
                 break;
             case 1:
                 setTab(2);
+                console.log(data);
                 break;
             default:
                 break;
