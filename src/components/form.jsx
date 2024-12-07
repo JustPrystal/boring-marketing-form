@@ -72,14 +72,12 @@ export default function Form() {
                         <form className="form" onSubmit={methods.handleSubmit(onSubmit)}>
                             {tab === 0 && (
                                 <>
-                                    <label className="input-label" for="html">Enter Url</label>
                                     <RHFTextfield
                                         className="input url-input"
                                         name="url"
                                         placeholder="Enter URL"
                                         label='Enter URLs, separated by commas or spaces.'
                                     />
-                                    <label className="input-label" for="html">Enter Email</label>
                                     <RHFTextfield
                                         className="input email-input"
                                         name="email"
