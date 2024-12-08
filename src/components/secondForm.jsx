@@ -5,7 +5,7 @@ import RHFTextfield from "./helpers/RHFTextfield";
 import { useState } from "react";
 import RHFSelect from "./helpers/RHFSelect";
 
-export default function Form() {
+export default function SecondForm() {
     const [tab, setTab] = useState(0);
 
     const formSchema = yup.object({
@@ -14,8 +14,8 @@ export default function Form() {
         goal: tab === 1 ? yup.string().required('Goal is required') : yup.string(),
         company: tab === 1 ? yup.string().required('Company name is required') : yup.string(),
         name: tab === 1 ? yup.string().required('Name is required') : yup.string(),
-        revenue: tab === 1 ? yup.number('Please provide a valid number').required('Revenue amount is required') : yup.string(),
-        budget: tab === 1 ? yup.number().typeError('Please provide a valid number').required('Growth budget is required') : yup.string()  // assuming you want to make it required as well when tab !== 1
+        revenue: tab === 1 ? yup.string().required('Revenue amount is required') : yup.string(),
+        budget: tab ===1 ? yup.string().required('Growth budget is required') : yup.string(),
     });
 
     const methods = useForm({
@@ -23,7 +23,7 @@ export default function Form() {
         defaultValues: {
             url: "",
             email: "",
-            goal: "",
+            goal: "",   
             revenue: "",
         },
     });
@@ -34,16 +34,13 @@ export default function Form() {
             case 0:
                 setTab(1);
                 break;
-                case 1:
-                    const inputs = document.querySelectorAll('.dollar-field');
-                    console.log(inputs);
-                    setTab(2);
+            case 1:
+                setTab(2);
                 break;
             default:
                 break;
         }
     };
-   
 
     const selectItems = [
         {
@@ -69,7 +66,7 @@ export default function Form() {
     ];
 
     return (
-        <section className="form-1">
+        <section className="form-2">
             <div className="inner">
                 <div className="form-wrap">
                     <FormProvider {...methods}>
@@ -79,8 +76,8 @@ export default function Form() {
                                     <RHFTextfield
                                         className="input url-input"
                                         name="url"
-                                        placeholder="Enter URLs, separated by commas or spaces."
-                                        label='Enter Competitor URLs'
+                                        placeholder="Paste URL"
+                                        label='Enter Competitor URL'
                                     />
                                     <RHFTextfield
                                         className="input email-input"
@@ -93,7 +90,7 @@ export default function Form() {
                                         <svg width="100%" height="100%" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M8.92602 20.6699C8.38277 20.6699 7.83953 20.4661 7.41065 20.0295L3.12187 15.6635C2.29271 14.8194 2.29271 13.4223 3.12187 12.5782C3.95104 11.7341 5.32345 11.7341 6.15261 12.5782L8.92602 15.4016L18.8474 5.30153C19.6766 4.45743 21.049 4.45743 21.8781 5.30153C22.7073 6.14562 22.7073 7.54274 21.8781 8.38684L10.4414 20.0295C10.0411 20.4661 9.46927 20.6699 8.92602 20.6699Z" fill="currentColor"></path>
                                         </svg>
-                                            Get Free Alerts
+                                            Get Free Keywords
                                         </button>
                                     </div>
                                 </>
@@ -113,12 +110,8 @@ export default function Form() {
                                         label='Company Name'
                                     />
                                     <RHFSelect className='input' name='goal' placeholder="Your Team's Goals" options={selectItems} label='2025 Organic Growth goal' />
-                                   <div className="prepend-wrap">
-                                        <RHFTextfield className='input dollar-field' name="revenue" placeholder="Enter Revenue Amount" label='Revenue goals'/>
-                                   </div>
-                                    <div className="prepend-wrap">
-                                        <RHFTextfield className='input dollar-field' name="budget" placeholder="Enter Estimated Growth Budget" label='Estimated growth budget / month' />
-                                    </div>
+                                    <RHFTextfield className='input' name="revenue" placeholder="Enter Revenue Amount" label='Revenue goals' />
+                                    <RHFTextfield className='input' name="budget" placeholder="Enter Estimated Growth Budget" label='Estimated growth budget / month' />
                                     <div className="btn-wrap">
                                         <button type="submit" className="submit-btn" >
                                             Submit

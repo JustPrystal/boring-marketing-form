@@ -13,11 +13,11 @@ export default function RHFSelect({ name, className, options, placeholder, label
                 <select
                     className={className}
                     {...register(name)} // Properly register the select field
-                    style={{ width: '100%', padding: '15px' }}
+                    
 
                 >
                     {placeholder && (
-                        <option className="placeholder" value="" disabled selected hidden>
+                        <option className="option" value="" disabled selected hidden>
                             {placeholder}
                         </option>
                     )}
@@ -27,7 +27,7 @@ export default function RHFSelect({ name, className, options, placeholder, label
                         </option>
                     ))}
                 </select>
-                {errors[name] && <p className="error-message" style={{ color: '#cc0000' }} >{errors[name]?.message}</p>}
+                {errors[name] && <p className="error-message"  >{errors[name]?.message}</p>}
             </div>
         </>
     );
