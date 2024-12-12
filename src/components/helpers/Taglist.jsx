@@ -7,9 +7,9 @@ const TagList = ({ tags, setTags }) => {
   };
 
   return (
-    <div style={{ marginTop: '10px', display: 'flex', flexWrap: 'wrap' }}>
+    <div  style={{ marginTop: '10px', display: 'flex', flexWrap: 'wrap' }}>
       {tags.map((tag, index) => (
-        <div
+        <div 
           key={index}
           style={{
             margin: '5px',
@@ -21,8 +21,8 @@ const TagList = ({ tags, setTags }) => {
             alignItems: 'center',
           }}
         >
-          <span>{tag}</span>
-          <button
+          <span >{tag}</span>
+          <button 
             onClick={() => handleTagRemove(tag)}
             style={{
               marginLeft: '10px',

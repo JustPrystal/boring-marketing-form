@@ -1,35 +1,51 @@
 import React, { useState } from "react";
 
-const TagInput = ({ onTagsChange, className }) => {
+const TagInput = ({ onTagsChange, className, name, label, error }) => {
   const [inputValue, setInputValue] = useState("");
   const [tags, setTags] = useState([]);
+  const [inputError, setInputError] = useState(""); 
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e) => {  
     setInputValue(e.target.value);
+    setInputError("");
   };
 
   const handleInputBlur = () => {
-    createTags(inputValue);
+    if (inputValue.trim()) {
+      createTags(inputValue);
+    }
   };
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      createTags(inputValue);
+      if (inputValue.trim()) {
+        createTags(inputValue);
+      }
     }
   };
 
   const createTags = (value) => {
-    const rawTags = value.split(",")
+    const rawTags = value
+      .split(",")
       .map((tag) => tag.trim())
-      .filter((tag) => {
-        const cleanedTag = isValidUrl(tag);
-        return cleanedTag !== null;
-      })
-      .map((tag) => isValidUrl(tag)); // Clean the URL before adding it to the list
-    setTags((prevTags) => [...prevTags, ...rawTags]);
-    setInputValue("");
-    onTagsChange(tags);
+      .filter((tag) => tag);
+
+    const validTags = rawTags.map((tag) => isValidUrl(tag)).filter((tag) => tag !== null);
+
+    if (validTags.length < rawTags.length) {
+      setInputError("Please enter a valid URL.");
+    } else {
+      setInputError(""); // Clear error if all URLs are valid
+    }
+
+    if (validTags.length > 0) {
+      setTags((prevTags) => [...prevTags, ...validTags]);
+      setInputValue("");
+      onTagsChange([...tags, ...validTags]);
+
+      methods.clearErrors("url");
+    }
   };
 
   const isValidUrl = (string) => {
@@ -37,7 +53,7 @@ const TagInput = ({ onTagsChange, className }) => {
     const match = string.match(pattern);
     if (match) {
       const cleanUrl = match[0].split('?')[0]; // Remove everything after the first ?
-      return cleanUrl;
+      return cleanUrl.startsWith("http") ? cleanUrl : `https://${cleanUrl}`; 
     }
     return null;
   };
@@ -48,9 +64,11 @@ const TagInput = ({ onTagsChange, className }) => {
     onTagsChange(newTags);
   };
 
+
   return (
-    <div className="form-group" style={{ marginBottom: '20px' }}>
-      <div>
+    <div className="form-group">
+      <div className="tag-input-wrap">
+      {label ? <label className="input-label" for={name}> {label}</label> : '' }
         <input
           type="text"
           className={className}
@@ -58,20 +76,33 @@ const TagInput = ({ onTagsChange, className }) => {
           onChange={handleInputChange}
           onBlur={handleInputBlur}
           onKeyDown={handleKeyPress}
-          placeholder="Enter URLs separated by commas"
-          style={{ width: '100%' }}
+          placeholder="Enter URLs, separated by commas or spaces."
+          name = {name}
         />
       </div>
+     {/* Display error message from react-hook-form if it exists */}
+    {error && !inputError && <p className="error-message">{error.message}</p>}
 
-      <div style={{ marginTop: "10px", display: "flex", flexWrap: "wrap" }}>
-        {tags.map((tag, index) => (
-          <div key={index}>
-            <span>{tag}</span>
-            <button onClick={() => handleTagRemove(tag)}>x</button>
-          </div>
-        ))}
-      </div>
+    {/* Display input-specific error (e.g., URL error) only if there is no react-hook-form error */}
+    { inputError && <p className="error-message">{inputError}</p>}
+    {tags.length > 0 && (
+        <div className="url-input-wrap">
+          {tags.map((tag, index) => (
+            <div key={index} className="url-input">
+              <span className="url-input-text">{tag}</span>
+              <button type="button" className="url-input-cross" onClick={() => handleTagRemove(tag)}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="11" viewBox="0 0 12 11" fill="none" >
+                  <line x1="1.14648" y1="10.6464" x2="11.1464" y2="0.646442" stroke="black" />
+                  <line x1="0.853584" y1="0.646447" x2="10.8535" y2="10.6464" stroke="black" />
+                </svg>
+              </button>
+            </div>
+          ))}
+
+        </div>
+      )}
     </div>
+    
   );
 };
 

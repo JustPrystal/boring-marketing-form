@@ -1,5 +1,6 @@
 /* @import must be at top of file, otherwise CSS will not work */
 
+
 // Breakpoints Structure
 $custom-breakpoints: (
     xs: (minSize: 0px, maxSize: 575px, name: 'XS'),
@@ -23,4 +24,10 @@ $primary: #FF5A5F;
     --lightRed : #ff8d8d;
     --blue : #37427a;
     --lightBlue: #e6f7ff;
+    --peach : #ffc069;
+    --borderBlue : #3898ec;
+    --green : #007333;
+    --orange: #ef8633;
+    --boxShadowBlue: #191733;
+    --gray : #f7f7f7;
 }
