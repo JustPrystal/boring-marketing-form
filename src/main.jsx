@@ -453,10 +453,30 @@ function KeywordRankingForm() {
     console.log(data);
     switch (tab) {
       case 0:
-        setTab(1);
+        const step1Object = {
+          email: data.email,
+          compURL: data.url,
+          name: null,
+          company: null,
+          growthGoal: null,
+          revenueGoal: null,
+          estGrowthBudget: null,
+        }
+        sendToZapier('https://hooks.zapier.com/hooks/catch/356942/2sw2c4p/', step1Object, 1, setTab)
+
         break;
       case 1:
-        setTab(2);
+        const step2Object = {
+          email: data.email,
+          compURL: data.url,
+          name: data.name,
+          company: data.company,
+          growthGoal: data.goal,
+          revenueGoal: data.revenue,
+          estGrowthBudget: data.budget,
+        }
+        sendToZapier('https://hooks.zapier.com/hooks/catch/356942/2sw2c4p/', step2Object, 2, setTab)
+
         break;
       default:
         break;
