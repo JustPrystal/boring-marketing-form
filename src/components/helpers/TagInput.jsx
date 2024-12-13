@@ -1,3 +1,4 @@
+/*
 import React, { useState } from "react";
 
 const TagInput = ({ onTagsChange, className, name, label, error }) => {
@@ -107,3 +108,4 @@ const TagInput = ({ onTagsChange, className, name, label, error }) => {
 };
 
 export default TagInput;
+*/

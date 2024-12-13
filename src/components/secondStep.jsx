@@ -1,3 +1,4 @@
+/*
 import RHFTextfield from "./helpers/RHFTextfield";
 import RHFSelect from "./helpers/RHFSelect";
 
@@ -63,3 +64,4 @@ const SecondStep = ({ selectItems, onSubmit, buttonClass, showNameField = true})
 };
 
 export default SecondStep;
+*/

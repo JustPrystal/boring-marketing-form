@@ -1,3 +1,4 @@
+/*
 import React from 'react';
 
 const TagList = ({ tags, setTags }) => {
@@ -41,3 +42,4 @@ const TagList = ({ tags, setTags }) => {
 };
 
 export default TagList;
+*/
