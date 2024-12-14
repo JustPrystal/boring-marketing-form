@@ -1,11 +1,13 @@
 import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
 import './assets/sass/styles.scss'
 import * as yup from "yup";
 import { useForm, FormProvider, useFormContext, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useState } from "react";
 import Select from 'react-select';
+import { createPortal } from "react-dom";
+import ReactDOM from 'react-dom';
+import './assets/sass/styles.scss';
 
 
 /*Helpers*/
@@ -188,7 +190,7 @@ function TagInput({ onTagsChange, className, name, label, error }) {
 
   );
 };
-function RHFSelect({ name, className, options, placeholder, label }) {
+function RHFSelect({ name, className, options, placeholder, label, isMultiSelect = false, isSearchable = false }) {
   const {
     control,
     formState: { errors },
@@ -204,16 +206,26 @@ function RHFSelect({ name, className, options, placeholder, label }) {
           rules={{ required: "Goal is required" }}
           render={({ field }) => (
             <Select
-              isMulti
-              {...field}
-              className={className}
-              options={options}
-              placeholder={placeholder}
-              classNamePrefix="custom"
-              onChange={(selected) => {
-                field.onChange(selected.map((option) => option.value)); // Map selected options to their values
-              }}
-              value={options.filter((option) => field.value?.includes(option.value))} // Sync selected options with form state
+            isMulti={isMultiSelect} // No need for ternary operator, true/false will work directly
+            {...field}
+            className={className}
+            options={options}
+            placeholder={placeholder}
+            isSearchable={isSearchable} 
+            classNamePrefix="custom"
+            onChange={(selected) => {
+              if (isMultiSelect) {
+                // For multi-select: map selected options to their values
+                field.onChange(selected.map((option) => option.value));
+              } else {
+                // For single-select: just return the selected value
+                field.onChange(selected ? selected.value : null);
+              }
+            }}
+            value={isMultiSelect 
+              ? options.filter((option) => field.value?.includes(option.value)) // For multi-select
+              : options.find((option) => option.value === field.value) // For single-select
+            }
             />
           )}
         />
@@ -225,6 +237,12 @@ function RHFSelect({ name, className, options, placeholder, label }) {
 /*end-Helpers*/
 
 function SecondStep({ selectItems, onSubmit, buttonClass, showNameField = true }) {
+  const BudgetGrowthSelectItems = [
+    { value: "<$10k", label: "<$10k" },
+    { value: "$10k - $50k", label: "$10k - $50k" },
+    { value: "$50k - $100k", label: "$50k - $100k" },
+    { value: ">$100k", label: ">$100k" },
+  ]
   return (
     <>
       {showNameField && (
@@ -248,6 +266,8 @@ function SecondStep({ selectItems, onSubmit, buttonClass, showNameField = true }
         options={selectItems}
         label="2025 Organic Growth Goal"
         defaultValue={[]}
+        isMultiSelect={true}
+        isSearchable={true}
       />
       <RHFTextfield
         isMoneyField={true}
@@ -256,12 +276,14 @@ function SecondStep({ selectItems, onSubmit, buttonClass, showNameField = true }
         placeholder="Enter Revenue Amount"
         label="Revenue Goals"
       />
-      <RHFTextfield
-        isMoneyField={true}
-        className="input dollar-field"
+      <RHFSelect
+        className="select-input dollar-field"
         name="budget"
+        isMoneyField={true}
         placeholder="Enter Estimated Growth Budget"
+        options={BudgetGrowthSelectItems}
         label="Estimated Growth Budget / Month"
+        defaultValue={[]}
       />
 
       <div className="btn-wrap">
@@ -289,8 +311,8 @@ function SecondStep({ selectItems, onSubmit, buttonClass, showNameField = true }
 function Form() {
   const [tab, setTab] = useState(0);
   const [urls, setUrls] = useState([]);
-  
-  function handleTabChange (tab) {
+
+  function handleTabChange(tab) {
     setTab(tab)
   }
 
@@ -306,7 +328,7 @@ function Form() {
     company: tab === 1 ? yup.string().required("Company name is required") : yup.string(),
     name: tab === 1 ? yup.string().required("Name is required") : yup.string(),
     revenue: tab === 1 ? yup.number().nullable().transform((value, originalValue) => originalValue === "" ? null : value).typeError("Input must be a number").required("Revenue amount is required") : yup.string(),
-    budget: tab === 1 ? yup.number().nullable().transform((value, originalValue) => originalValue === "" ? null : value).typeError("Input must be a number").required("Growth budget is required") : yup.string(),
+    budget: tab === 1 ? yup.string().required("Growth budget is required") : yup.string(),
   });
   const methods = useForm({
     resolver: yupResolver(formSchema),
@@ -406,7 +428,7 @@ function Form() {
               )}
               {tab === 2 && (
                 <>
-                  <p>step 3 </p>
+                  <iframe src="https://calendly.com/boringmarketing/boringmarketing-com-30min-demo-call " height={1000}></iframe>
                 </>
               )}
             </form>
@@ -431,7 +453,7 @@ function KeywordRankingForm() {
     company: tab === 1 ? yup.string().required('Company name is required.') : yup.string(),
     name: tab === 1 ? yup.string().required('Name is required.') : yup.string(),
     revenue: tab === 1 ? yup.number().nullable().transform((value, originalValue) => originalValue === "" ? null : value).typeError("Input must be a number").required("Revenue amount is required") : yup.string(),
-    budget: tab === 1 ? yup.number().nullable().transform((value, originalValue) => originalValue === "" ? null : value).typeError("Input must be a number").required("Growth budget is required") : yup.string(),
+    budget: tab === 1 ? yup.string().required("Growth budget is required") : yup.string(),
   });
 
   const methods = useForm({
@@ -536,7 +558,7 @@ function KeywordRankingForm() {
               )}
               {tab === 2 && (
                 <>
-                  <p>step 3</p>
+                  <iframe src="https://calendly.com/boringmarketing/boringmarketing-com-30min-demo-call " height={1000}></iframe>
                 </>
               )}
             </form>
@@ -562,7 +584,7 @@ function ToolkitForm() {
     }) : yup.string(),
     company: tab === 1 ? yup.string().required("Company name is required") : yup.string(),
     revenue: tab === 1 ? yup.number().nullable().transform((value, originalValue) => originalValue === "" ? null : value).typeError("Input must be a number").required("Revenue amount is required") : yup.string(),
-    budget: tab === 1 ? yup.number().nullable().transform((value, originalValue) => originalValue === "" ? null : value).typeError("Input must be a number").required("Growth budget is required") : yup.string(),
+    budget: tab === 1 ? yup.string().required("Growth budget is required") : yup.string(),
   });
   const methods = useForm({
     resolver: yupResolver(formSchema),
@@ -585,10 +607,28 @@ function ToolkitForm() {
     // If validation passes, proceed with form submission
     switch (tab) {
       case 0:
-        setTab(1);
+        const step1Object = {
+          name: data.name,
+          companyWebsite: data.url,
+          workEmail: data.email,
+          companyName: null,
+          growthGoal: null,
+          revenueGoal: null,
+          estGrowthBudget: null
+        }
+        sendToZapier('https://hooks.zapier.com/hooks/catch/356942/2swkam2/', step1Object, 1, setTab)
         break;
       case 1:
-        setTab(2);
+        const step2Object = {
+          name: data.name,
+          companyWebsite: data.url,
+          workEmail: data.email,
+          companyName: data.company,
+          growthGoal: data.goal,
+          revenueGoal: data.revenue,
+          estGrowthBudget: data.budget
+        }
+        sendToZapier('https://hooks.zapier.com/hooks/catch/356942/2swkam2/', step2Object, 2, setTab)
         break;
       default:
         break;
@@ -637,7 +677,7 @@ function ToolkitForm() {
               )}
               {tab === 2 && (
                 <>
-                  <p>step 3 </p>
+                  <iframe src="https://calendly.com/boringmarketing/boringmarketing-com-30min-demo-call " height={1000}></iframe>
                 </>
               )}
             </form>
@@ -647,7 +687,7 @@ function ToolkitForm() {
     </section >
   );
 }
-function SecondForm() {
+function SEOCourseForm() {
   const [tab, setTab] = useState(0);
 
   const formSchema = yup.object({
@@ -661,7 +701,7 @@ function SecondForm() {
     company: tab === 1 ? yup.string().required('Company name is required.') : yup.string(),
     name: tab === 1 ? yup.string().required('Name is required.') : yup.string(),
     revenue: tab === 1 ? yup.number().nullable().transform((value, originalValue) => originalValue === "" ? null : value).typeError("Input must be a number").required("Revenue amount is required") : yup.string(),
-    budget: tab === 1 ? yup.number().nullable().transform((value, originalValue) => originalValue === "" ? null : value).typeError("Input must be a number").required("Growth budget is required") : yup.string(),
+    budget: tab === 1 ? yup.string().required("Growth budget is required") : yup.string(),
   });
 
   const methods = useForm({
@@ -684,10 +724,26 @@ function SecondForm() {
     console.log(data);
     switch (tab) {
       case 0:
-        setTab(1);
+        const step1Object = {
+          email: data.email,
+          name: null,
+          companyName: null,
+          growthGoal: null,
+          revenueGoal: null,
+          estGrowthBudget: null
+        }
+        sendToZapier('https://hooks.zapier.com/hooks/catch/356942/2swecao/', step1Object, 1, setTab)
         break;
       case 1:
-        setTab(2);
+        const step2Object = {
+          email: data.email,
+          name: data.name,
+          companyName: data.company,
+          growthGoal: data.goal,
+          revenueGoal: data.revenue,
+          estGrowthBudget: data.budget
+        }
+        sendToZapier('https://hooks.zapier.com/hooks/catch/356942/2swecao/', step2Object, 2, setTab)
         break;
       default:
         break;
@@ -744,7 +800,7 @@ function SecondForm() {
               )}
               {tab === 2 && (
                 <>
-                  <p>step 3</p>
+                  <iframe src="https://calendly.com/boringmarketing/boringmarketing-com-30min-demo-call " height={1000}></iframe>
                 </>
               )}
             </form>
@@ -782,11 +838,35 @@ const sendToZapier = async (url, bodyData, nextTab, setTab) => {
 };
 
 
-createRoot(document.getElementById('root')).render(
+// Portal rendering component
+const RenderPortals = () => {
+  // Form component
+  const formRoot = document.getElementById("form-root");
+  const keywordRankingRoot = document.getElementById("keyword-ranking-root");
+  const toolkitRoot = document.getElementById("toolkit-root");
+  const SEOCourseFormRoot = document.getElementById("seo-course-form-root");
+
+  return (
+    <>
+      {formRoot && createPortal(<Form />, formRoot)}
+      {keywordRankingRoot && createPortal(<KeywordRankingForm />, keywordRankingRoot)}
+      {toolkitRoot && createPortal(<ToolkitForm />, toolkitRoot)}
+      {SEOCourseFormRoot && createPortal(<SEOCourseForm />, SEOCourseFormRoot)}
+    </>
+  );
+};
+
+const App = () => {
+  return (
+    <div>
+      <RenderPortals />
+    </div>
+  );
+};
+
+// Render the App component into the root div
+ReactDOM.createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Form />
-    <KeywordRankingForm />
-    <ToolkitForm />
-    <SecondForm />
-  </StrictMode>,
-)
+    <App />
+  </StrictMode>
+);
