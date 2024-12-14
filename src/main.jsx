@@ -1,3 +1,4 @@
+import React from 'react';
 import { StrictMode } from 'react'
 import { createPortal } from "react-dom";
 import ReactDOM from "react-dom/client";
