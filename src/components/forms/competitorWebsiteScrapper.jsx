@@ -5,6 +5,7 @@ import { useState } from "react";
 import SecondStep from "./secondStep";
 import RHFTextfield from "../helpers/RHFTextfield";
 import TagInput from "../helpers/TagInput";
+import { sendToZapier } from '../../utils/sendToZapier';
 
 export default function CompetitorWebsiteScrapperForm() {
   const [tab, setTab] = useState(0);
@@ -102,6 +103,7 @@ export default function CompetitorWebsiteScrapperForm() {
                     }}
                     className="input"
                     name="url"
+                    methods={methods}
                     label="Enter Competitor URLs"
                     error={methods.formState.errors.url} // Pass the error here
                   />

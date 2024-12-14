@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function TagInput({ onTagsChange, className, name, label, error }) {
+export default function TagInput({ onTagsChange, className, name, label, error, methods }) {
   const [inputValue, setInputValue] = useState("");
   const [tags, setTags] = useState([]);
   const [inputError, setInputError] = useState("");

@@ -4,6 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useState } from "react";
 import SecondStep from "./secondStep";
 import RHFTextfield from "../helpers/RHFTextfield";
+import { sendToZapier } from '../../utils/sendToZapier';
 
 export default function SEOCourseForm() {
   const [tab, setTab] = useState(0);
