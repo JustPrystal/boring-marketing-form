@@ -1,12 +1,11 @@
-/*
-import React, { useState } from "react";
+import { useState } from "react";
 
-const TagInput = ({ onTagsChange, className, name, label, error }) => {
+export default function TagInput({ onTagsChange, className, name, label, error }) {
   const [inputValue, setInputValue] = useState("");
   const [tags, setTags] = useState([]);
-  const [inputError, setInputError] = useState(""); 
+  const [inputError, setInputError] = useState("");
 
-  const handleInputChange = (e) => {  
+  const handleInputChange = (e) => {
     setInputValue(e.target.value);
     setInputError("");
   };
@@ -54,7 +53,7 @@ const TagInput = ({ onTagsChange, className, name, label, error }) => {
     const match = string.match(pattern);
     if (match) {
       const cleanUrl = match[0].split('?')[0]; // Remove everything after the first ?
-      return cleanUrl.startsWith("http") ? cleanUrl : `https://${cleanUrl}`; 
+      return cleanUrl.startsWith("http") ? cleanUrl : `https://${cleanUrl}`;
     }
     return null;
   };
@@ -69,7 +68,7 @@ const TagInput = ({ onTagsChange, className, name, label, error }) => {
   return (
     <div className="form-group">
       <div className="tag-input-wrap">
-      {label ? <label className="input-label" for={name}> {label}</label> : '' }
+        {label ? <label className="input-label" for={name}> {label}</label> : ''}
         <input
           type="text"
           className={className}
@@ -78,15 +77,15 @@ const TagInput = ({ onTagsChange, className, name, label, error }) => {
           onBlur={handleInputBlur}
           onKeyDown={handleKeyPress}
           placeholder="Enter URLs, separated by commas or spaces."
-          name = {name}
+          name={name}
         />
       </div>
-     {/* Display error message from react-hook-form if it exists */}
-    {error && !inputError && <p className="error-message">{error.message}</p>}
+      {/* Display error message from react-hook-form if it exists */}
+      {error && !inputError && <p className="error-message">{error.message}</p>}
 
-    {/* Display input-specific error (e.g., URL error) only if there is no react-hook-form error */}
-    { inputError && <p className="error-message">{inputError}</p>}
-    {tags.length > 0 && (
+      {/* Display input-specific error (e.g., URL error) only if there is no react-hook-form error */}
+      {inputError && <p className="error-message">{inputError}</p>}
+      {tags.length > 0 && (
         <div className="url-input-wrap">
           {tags.map((tag, index) => (
             <div key={index} className="url-input">
@@ -103,9 +102,6 @@ const TagInput = ({ onTagsChange, className, name, label, error }) => {
         </div>
       )}
     </div>
-    
+
   );
 };
-
-export default TagInput;
-*/
