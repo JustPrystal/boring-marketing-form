@@ -309,7 +309,7 @@ function SecondStep({ selectItems, onSubmit, buttonClass, showNameField = true }
 
 /*forms*/
 function Form() {
-  const [tab, setTab] = useState(0);
+  const [tab, setTab] = useState(1);
   const [urls, setUrls] = useState([]);
 
   function handleTabChange(tab) {
@@ -439,7 +439,7 @@ function Form() {
   );
 }
 function KeywordRankingForm() {
-  const [tab, setTab] = useState(0);
+  const [tab, setTab] = useState(1);
 
   const formSchema = yup.object({
     url: yup.string().url("Please enter a valid URL.").required("URL is required."),
@@ -569,7 +569,7 @@ function KeywordRankingForm() {
   );
 }
 function ToolkitForm() {
-  const [tab, setTab] = useState(0);
+  const [tab, setTab] = useState(1);
   const [urls, setUrls] = useState([]);
 
   const formSchema = yup.object({
@@ -688,7 +688,7 @@ function ToolkitForm() {
   );
 }
 function SEOCourseForm() {
-  const [tab, setTab] = useState(0);
+  const [tab, setTab] = useState(1);
 
   const formSchema = yup.object({
     email: yup.string().email("Please enter a valid email address.").required("Email is required."),
