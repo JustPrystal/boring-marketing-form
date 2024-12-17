@@ -116,7 +116,7 @@ export default function ToolkitForm() {
               )}
               {tab === 2 && (
                 <>
-                  <iframe src="https://calendly.com/boringmarketing/boringmarketing-com-30min-demo-call " height={1000}></iframe>
+                  <iframe src="https://calendly.com/boringmarketing/boringmarketing-com-30min-demo-call " height={380}></iframe>
                 </>
               )}
             </form>
