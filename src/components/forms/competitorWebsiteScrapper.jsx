@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import * as yup from "yup";
 import { useForm, FormProvider, } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -15,6 +15,11 @@ export default function CompetitorWebsiteScrapperForm() {
   function handleTabChange(tab) {
     setTab(tab)
   }
+
+  const defaultEmailParam = 'email-submission';
+  const customParam = 'details-capture';
+  const calendlyParam = 'calendly-book-a-call';
+
 
   const formSchema = yup.object({
     url: yup.array().of(yup.string().url("Invalid URL").required("Each URL must be valid")).min(1, "At least one URL is required").required("At least one URL is required"), // Ensures the URL array is not empty
@@ -43,13 +48,76 @@ export default function CompetitorWebsiteScrapperForm() {
     },
   });
 
+  useEffect(() => {
+
+    const currentUrl = window.location.href.split('?')[0];
+    const urlParams = new URLSearchParams(window.location.search);
+
+    if (!urlParams.has('step') || urlParams.get('step') !== defaultEmailParam) {
+      urlParams.set('step', defaultEmailParam); 
+    }
+    if (tab === 0) {
+      urlParams.set('step', defaultEmailParam); 
+      // fbq('track', 'Lead scraper'); 
+    }
+    if (tab === 1) {
+      urlParams.set('step', customParam); 
+      // fbq('track', 'Details scraper'); 
+    }
+    if (tab === 2) {
+      urlParams.set('step', calendlyParam); 
+      // fbq('track', 'Calendly scraper'); 
+    }
+
+    const newUrl = `${currentUrl}?${urlParams.toString()}`;
+    
+    
+    window.history.pushState({ path: newUrl }, '', newUrl);
+  }, [tab]); 
+
+
+  useEffect(() => {
+    const handleCalendlyMessage = (event) => {
+      // Only handle events from Calendly's domain
+
+      console.log('Received message from iframe:', event);
+      
+      if (event.origin === 'https://calendly.com') {
+        try {
+          const data = JSON.parse(event.data);
+          console.log(data);
+          // Check if the event type is 'calendly.event_scheduled'
+          if (data.event === 'invitee_meeting_scheduled') {
+            console.log('Meeting Scheduled! Firing Facebook Pixel event...');
+            // Fire your custom Facebook Pixel event
+            fbq('track', 'Calendly Scheduled');  // Custom Pixel event for a scheduled call
+          }
+        } catch (error) {
+          console.error('Error parsing Calendly message', error);
+        }
+      }
+    };
+
+    // Add event listener for message events
+    window.addEventListener('message', handleCalendlyMessage);
+
+    // Clean up event listener on component unmount
+    return () => {
+      window.removeEventListener('message', handleCalendlyMessage);
+    };
+  }, []);
+
+
   const onSubmit = (data) => {
     if (data.url.length === 0) {
       methods.setError("url", { message: "At least one URL is required." });
       return;
     }
     console.log(data);
-    // If validation passes, proceed with form submission
+    
+   
+
+
     switch (tab) {
       case 0:
         const step1Object = {
@@ -62,7 +130,9 @@ export default function CompetitorWebsiteScrapperForm() {
           estGrowthBudget: null
         }
         sendToZapier('https://hooks.zapier.com/hooks/catch/356942/2sk0oqt/', step1Object, 1, setTab)
-
+        
+        // Fire Facebook Pixel Lead event when Step 1 form is submitted
+        fbq('track', 'Lead scraper');  // This will fire the "Lead" event 
         break;
       case 1:
         const step2Object = {
@@ -74,7 +144,12 @@ export default function CompetitorWebsiteScrapperForm() {
           revenueGoal: data.revenue,
           estGrowthBudget: data.budget
         }
+        
         sendToZapier('https://hooks.zapier.com/hooks/catch/356942/2sk0oqt/', step2Object, 2, setTab)
+        
+        // Fire Facebook Pixel CompleteRegistration event when Step 2 form is submitted
+        fbq('track', 'Details scraper');
+
         break;
       default:
         break;
