@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import * as yup from "yup";
 import { useForm, FormProvider, } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -6,6 +6,8 @@ import { useState } from "react";
 import SecondStep from "./secondStep";
 import RHFTextfield from "../helpers/RHFTextfield";
 import { sendToZapier } from '../../utils/sendToZapier';
+import { updateStepUrl } from '../../utils/helper';
+import CalendlyEmbed from './Calendly-widget';
 
 export default function SEOCourseForm() {
   const [tab, setTab] = useState(0);
@@ -36,6 +38,12 @@ export default function SEOCourseForm() {
     },
   });
 
+  useEffect(() => {
+
+    updateStepUrl(tab);
+
+  }, [tab]); 
+
 
   const onSubmit = (data) => {
     if (data.url && !data.url.startsWith("http")) {
@@ -53,6 +61,7 @@ export default function SEOCourseForm() {
           estGrowthBudget: null
         }
         sendToZapier('https://hooks.zapier.com/hooks/catch/356942/2swecao/', step1Object, 1, setTab)
+        fbq('track', 'Lead freecourse');        
         break;
       case 1:
         const step2Object = {
@@ -64,6 +73,7 @@ export default function SEOCourseForm() {
           estGrowthBudget: data.budget
         }
         sendToZapier('https://hooks.zapier.com/hooks/catch/356942/2swecao/', step2Object, 2, setTab)
+        fbq('track', 'Details freecourse');        
         break;
       default:
         break;
@@ -119,9 +129,7 @@ export default function SEOCourseForm() {
                 </>
               )}
               {tab === 2 && (
-                <>
-                  <iframe src="https://calendly.com/boringmarketing/boringmarketing-com-30min-demo-call " height={1000}></iframe>
-                </>
+              <CalendlyEmbed tag="Calendly freecourse" />
               )}
             </form>
           </FormProvider>

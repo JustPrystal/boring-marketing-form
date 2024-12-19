@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import * as yup from "yup";
 import { useForm, FormProvider, } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -6,6 +6,8 @@ import { useState } from "react";
 import SecondStep from "./secondStep";
 import RHFTextfield from "../helpers/RHFTextfield";
 import { sendToZapier } from '../../utils/sendToZapier';
+import { updateStepUrl } from '../../utils/helper';
+import CalendlyEmbed from './Calendly-widget';
 
 export default function ToolkitForm() {
   const [tab, setTab] = useState(0);
@@ -38,6 +40,13 @@ export default function ToolkitForm() {
     },
   });
 
+  useEffect(() => {
+
+    updateStepUrl(tab);
+
+  }, [tab]); 
+
+
   const onSubmit = (data) => {
     if (data.url && !data.url.startsWith("http")) {
       data.url = `https://${data.url}`;
@@ -56,6 +65,7 @@ export default function ToolkitForm() {
           estGrowthBudget: null
         }
         sendToZapier('https://hooks.zapier.com/hooks/catch/356942/2swkam2/', step1Object, 1, setTab)
+        fbq('track', 'Lead toolkit');        
         break;
       case 1:
         const step2Object = {
@@ -68,6 +78,7 @@ export default function ToolkitForm() {
           estGrowthBudget: data.budget
         }
         sendToZapier('https://hooks.zapier.com/hooks/catch/356942/2swkam2/', step2Object, 2, setTab)
+        fbq('track', 'Details toolkit');   
         break;
       default:
         break;
@@ -115,9 +126,9 @@ export default function ToolkitForm() {
                 </>
               )}
               {tab === 2 && (
-                <>
-                  <iframe src="https://calendly.com/boringmarketing/boringmarketing-com-30min-demo-call " height={380}></iframe>
-                </>
+               
+                  <CalendlyEmbed tag= "Calendly toolkit" />
+               
               )}
             </form>
           </FormProvider>

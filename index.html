@@ -21,8 +21,10 @@
   fbq('track', 'PageView');
 </script>
 
+<!-- <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script> -->
 
 <!-- End Facebook Pixel Code -->  
+
 
 </head>
 
@@ -33,6 +35,12 @@
   <div id="toolkit-root"></div>
   <div id="seo-course-form-root"></div>
   <script type="module" src="/src/main.jsx"></script>
+  <script>
+
+    Calendly.initInlineWidget({
+     "url": 'https://calendly.com/boringmarketing/boringmarketing-com-30min-demo-call',
+});
+</script>
 </body>
 
 </html>

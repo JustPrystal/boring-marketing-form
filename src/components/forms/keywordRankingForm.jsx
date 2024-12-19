@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import * as yup from "yup";
 import { useForm, FormProvider, } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -6,6 +6,8 @@ import { useState } from "react";
 import SecondStep from "./secondStep";
 import RHFTextfield from "../helpers/RHFTextfield";
 import { sendToZapier } from '../../utils/sendToZapier';
+import { updateStepUrl } from '../../utils/helper';
+import CalendlyEmbed from './Calendly-widget';
 
 export default function KeywordRankingForm() {
   const [tab, setTab] = useState(0);
@@ -36,6 +38,12 @@ export default function KeywordRankingForm() {
     },
   });
 
+  useEffect(() => {
+
+    updateStepUrl(tab);
+
+  }, [tab]); 
+
 
   const onSubmit = (data) => {
     if (data.url && !data.url.startsWith("http")) {
@@ -54,6 +62,7 @@ export default function KeywordRankingForm() {
           estGrowthBudget: null,
         }
         sendToZapier('https://hooks.zapier.com/hooks/catch/356942/2sw2c4p/', step1Object, 1, setTab)
+        fbq('track', 'Lead rankingtool');        
 
         break;
       case 1:
@@ -68,6 +77,7 @@ export default function KeywordRankingForm() {
         }
         sendToZapier('https://hooks.zapier.com/hooks/catch/356942/2sw2c4p/', step2Object, 2, setTab)
 
+        fbq('track', 'Details rankingtool');
         break;
       default:
         break;
@@ -126,9 +136,7 @@ export default function KeywordRankingForm() {
                 </>
               )}
               {tab === 2 && (
-                <>
-                  <iframe src="https://calendly.com/boringmarketing/boringmarketing-com-30min-demo-call " height={1000}></iframe>
-                </>
+               <CalendlyEmbed tag="Calendly rankingtool" />
               )}
             </form>
           </FormProvider>

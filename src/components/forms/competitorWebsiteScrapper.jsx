@@ -7,6 +7,8 @@ import SecondStep from "./secondStep";
 import RHFTextfield from "../helpers/RHFTextfield";
 import TagInput from "../helpers/TagInput";
 import { sendToZapier } from '../../utils/sendToZapier';
+import CalendlyEmbed from './Calendly-widget';
+import { updateStepUrl } from '../../utils/helper';
 
 export default function CompetitorWebsiteScrapperForm() {
   const [tab, setTab] = useState(0);
@@ -16,9 +18,6 @@ export default function CompetitorWebsiteScrapperForm() {
     setTab(tab)
   }
 
-  const defaultEmailParam = 'email-submission';
-  const customParam = 'details-capture';
-  const calendlyParam = 'calendly-book-a-call';
 
 
   const formSchema = yup.object({
@@ -50,62 +49,10 @@ export default function CompetitorWebsiteScrapperForm() {
 
   useEffect(() => {
 
-    const currentUrl = window.location.href.split('?')[0];
-    const urlParams = new URLSearchParams(window.location.search);
+    updateStepUrl(tab);
 
-    if (!urlParams.has('step') || urlParams.get('step') !== defaultEmailParam) {
-      urlParams.set('step', defaultEmailParam); 
-    }
-    if (tab === 0) {
-      urlParams.set('step', defaultEmailParam); 
-      // fbq('track', 'Lead scraper'); 
-    }
-    if (tab === 1) {
-      urlParams.set('step', customParam); 
-      // fbq('track', 'Details scraper'); 
-    }
-    if (tab === 2) {
-      urlParams.set('step', calendlyParam); 
-      // fbq('track', 'Calendly scraper'); 
-    }
-
-    const newUrl = `${currentUrl}?${urlParams.toString()}`;
-    
-    
-    window.history.pushState({ path: newUrl }, '', newUrl);
   }, [tab]); 
 
-
-  useEffect(() => {
-    const handleCalendlyMessage = (event) => {
-      // Only handle events from Calendly's domain
-
-      console.log('Received message from iframe:', event);
-      
-      if (event.origin === 'https://calendly.com') {
-        try {
-          const data = JSON.parse(event.data);
-          console.log(data);
-          // Check if the event type is 'calendly.event_scheduled'
-          if (data.event === 'invitee_meeting_scheduled') {
-            console.log('Meeting Scheduled! Firing Facebook Pixel event...');
-            // Fire your custom Facebook Pixel event
-            fbq('track', 'Calendly Scheduled');  // Custom Pixel event for a scheduled call
-          }
-        } catch (error) {
-          console.error('Error parsing Calendly message', error);
-        }
-      }
-    };
-
-    // Add event listener for message events
-    window.addEventListener('message', handleCalendlyMessage);
-
-    // Clean up event listener on component unmount
-    return () => {
-      window.removeEventListener('message', handleCalendlyMessage);
-    };
-  }, []);
 
 
   const onSubmit = (data) => {
@@ -149,6 +96,7 @@ export default function CompetitorWebsiteScrapperForm() {
         
         // Fire Facebook Pixel CompleteRegistration event when Step 2 form is submitted
         fbq('track', 'Details scraper');
+        
 
         break;
       default:
@@ -203,14 +151,17 @@ export default function CompetitorWebsiteScrapperForm() {
                 </>
               )}
               {tab === 2 && (
-                <>
-                  <iframe src="https://calendly.com/boringmarketing/boringmarketing-com-30min-demo-call " height={1000}></iframe>
-                </>
+               
+                  <CalendlyEmbed tag="Calendly scraper" />
+               
               )}
             </form>
           </FormProvider>
+         
         </div>
-      </div>
+       
+      </div>  
     </section >
+
   );
 }
