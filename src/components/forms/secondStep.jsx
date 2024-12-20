@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import RHFTextfield from "../helpers/RHFTextfield";
 import RHFSelect from "../helpers/RHFSelect";
@@ -64,7 +65,7 @@ export default function SecondStep({ selectItems, onSubmit, buttonClass, showNam
             <path
               d="M8.92602 20.6699C8.38277 20.6699 7.83953 20.4661 7.41065 20.0295L3.12187 15.6635C2.29271 14.8194 2.29271 13.4223 3.12187 12.5782C3.95104 11.7341 5.32345 11.7341 6.15261 12.5782L8.92602 15.4016L18.8474 5.30153C19.6766 4.45743 21.049 4.45743 21.8781 5.30153C22.7073 6.14562 22.7073 7.54274 21.8781 8.38684L10.4414 20.0295C10.0411 20.4661 9.46927 20.6699 8.92602 20.6699Z"
               fill="currentColor"
-            ></path>
+            />
           </svg>
           Submit
         </button>
@@ -72,3 +73,4 @@ export default function SecondStep({ selectItems, onSubmit, buttonClass, showNam
     </>
   );
 };
+
