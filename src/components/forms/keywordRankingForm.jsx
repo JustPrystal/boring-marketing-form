@@ -24,15 +24,15 @@ export default function KeywordRankingForm() {
     goal:
       tab === 1
         ? yup
-            .array()
-            .of(yup.string().required("Goal is required"))
-            .min(1, "At least one goal must be selected")
-            .transform((value, originalValue) => {
-              if (originalValue === "") {
-                return [];
-              }
-              return value;
-            })
+          .array()
+          .of(yup.string().required("Goal is required"))
+          .min(1, "At least one goal must be selected")
+          .transform((value, originalValue) => {
+            if (originalValue === "") {
+              return [];
+            }
+            return value;
+          })
         : yup.string(),
     company:
       tab === 1
@@ -42,13 +42,13 @@ export default function KeywordRankingForm() {
     revenue:
       tab === 1
         ? yup
-            .number()
-            .nullable()
-            .transform((value, originalValue) =>
-              originalValue === "" ? null : value
-            )
-            .typeError("Input must be a number")
-            .required("Revenue amount is required")
+          .number()
+          .nullable()
+          .transform((value, originalValue) =>
+            originalValue === "" ? null : value
+          )
+          .typeError("Input must be a number")
+          .required("Revenue amount is required")
         : yup.string(),
     budget:
       tab === 1
@@ -90,72 +90,78 @@ export default function KeywordRankingForm() {
       estGrowthBudget: data.budget || null,
     };
 
-    try {
-      // Make the additional API call using fetch
-      const response = await fetch(
-        "https://hkhc1rvaa6.execute-api.ap-south-1.amazonaws.com/prod/bm-freemium-competitor-keyword-ranking",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(jsonData),
-        }
-      );
-
-      if (response.ok) {
-        console.log("Additional API call successful:", await response.text());
-      } else {
-        console.error(
-          "Additional API call failed:",
-          response.status,
-          response.statusText
+    if (tab === 0) {
+      try {
+        // Make the additional API call using fetch
+        const response = await fetch(
+          "https://hkhc1rvaa6.execute-api.ap-south-1.amazonaws.com/prod/bm-freemium-competitor-keyword-ranking",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(jsonData),
+          }
         );
+
+        if (response.ok) {
+          console.log("Additional API call successful:", await response.text());
+        } else {
+          console.error(
+            "Additional API call failed:",
+            response.status,
+            response.statusText
+          );
+        }
+      } catch (error) {
+        console.error("Error making additional API call:", error);
       }
-    } catch (error) {
-      console.error("Error making additional API call:", error);
     }
 
     // Determine the API endpoint based on the tab and send data to Zapier
     switch (tab) {
       case 0:
-        const step1Object = {
-          email: data.email,
-          compURL: data.url,
-          name: null,
-          company: null,
-          growthGoal: null,
-          revenueGoal: null,
-          estGrowthBudget: null,
-        };
-        sendToZapier(
-          "https://hooks.zapier.com/hooks/catch/356942/2sw2c4p/",
-          step1Object,
-          1,
-          setTab
-        );
-        fbq("track", "Lead rankingtool");
+        {
+          const step1Object = {
+            email: data.email,
+            compURL: data.url,
+            name: null,
+            company: null,
+            growthGoal: null,
+            revenueGoal: null,
+            estGrowthBudget: null,
+          };
+          sendToZapier(
+            "https://hooks.zapier.com/hooks/catch/356942/2sw2c4p/",
+            step1Object,
+            1,
+            setTab
+          );
+          fbq("track", "Lead rankingtool");
 
-        break;
+          break;
+        }
       case 1:
-        const step2Object = {
-          email: data.email,
-          compURL: data.url,
-          name: data.name,
-          company: data.company,
-          growthGoal: data.goal,
-          revenueGoal: data.revenue,
-          estGrowthBudget: data.budget,
-        };
-        sendToZapier(
-          "https://hooks.zapier.com/hooks/catch/356942/2sw2c4p/",
-          step2Object,
-          2,
-          setTab
-        );
+        {
+          const step2Object = {
+            email: data.email,
+            compURL: data.url,
+            name: data.name,
+            company: data.company,
+            growthGoal: data.goal,
+            revenueGoal: data.revenue,
+            estGrowthBudget: data.budget,
+          };
+          sendToZapier(
+            "https://hooks.zapier.com/hooks/catch/356942/2sw2c4p/",
+            step2Object,
+            2,
+            setTab
+          );
 
-        fbq("track", "Details rankingtool");
-        break;
+          fbq("track", "Details rankingtool");
+          break;
+        }
       default:
         break;
     }

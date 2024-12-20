@@ -31,15 +31,15 @@ export default function CompetitorWebsiteScrapperForm() {
     goal:
       tab === 1
         ? yup
-            .array()
-            .of(yup.string().required("Goal is required"))
-            .min(1, "At least one goal must be selected")
-            .transform((value, originalValue) => {
-              if (originalValue === "") {
-                return [];
-              }
-              return value;
-            })
+          .array()
+          .of(yup.string().required("Goal is required"))
+          .min(1, "At least one goal must be selected")
+          .transform((value, originalValue) => {
+            if (originalValue === "") {
+              return [];
+            }
+            return value;
+          })
         : yup.string(),
     company:
       tab === 1
@@ -49,13 +49,13 @@ export default function CompetitorWebsiteScrapperForm() {
     revenue:
       tab === 1
         ? yup
-            .number()
-            .nullable()
-            .transform((value, originalValue) =>
-              originalValue === "" ? null : value
-            )
-            .typeError("Input must be a number")
-            .required("Revenue amount is required")
+          .number()
+          .nullable()
+          .transform((value, originalValue) =>
+            originalValue === "" ? null : value
+          )
+          .typeError("Input must be a number")
+          .required("Revenue amount is required")
         : yup.string(),
     budget:
       tab === 1
@@ -90,78 +90,84 @@ export default function CompetitorWebsiteScrapperForm() {
       competitor_urls: data.url || [],
     };
 
-    try {
-      // Make the scraping API call using fetch
-      const scrapingResponse = await fetch(
-        "https://p2k5lsh4pc.execute-api.ap-south-1.amazonaws.com/prod/bm-freemium-competitor-website-scapping",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "text/plain",
-          },
-          body: JSON.stringify(scrapingJsonData),
-        }
-      );
+    if (tab === 0) {
+      try {
+        // Make the scraping API call using fetch
+        const scrapingResponse = await fetch(
+          "https://p2k5lsh4pc.execute-api.ap-south-1.amazonaws.com/prod/bm-freemium-competitor-website-scapping",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "text/plain",
+            },
+            body: JSON.stringify(scrapingJsonData),
+          }
+        );
 
-      if (scrapingResponse.ok) {
-        console.log(
-          "Scraping API call successful:",
-          await scrapingResponse.text()
-        );
-      } else {
-        console.error(
-          "Scraping API call failed:",
-          scrapingResponse.status,
-          scrapingResponse.statusText
-        );
+        if (scrapingResponse.ok) {
+          console.log(
+            "Scraping API call successful:",
+            await scrapingResponse.text()
+          );
+        } else {
+          console.error(
+            "Scraping API call failed:",
+            scrapingResponse.status,
+            scrapingResponse.statusText
+          );
+        }
+      } catch (error) {
+        console.error("Error making scraping API call:", error);
       }
-    } catch (error) {
-      console.error("Error making scraping API call:", error);
     }
 
     switch (tab) {
       case 0:
-        const step1Object = {
-          email: data.email,
-          compURLs: data.url,
-          name: null,
-          company: null,
-          growthGoal: null,
-          revenueGoal: null,
-          estGrowthBudget: null,
-        };
-        sendToZapier(
-          "https://hooks.zapier.com/hooks/catch/356942/2sk0oqt/",
-          step1Object,
-          1,
-          setTab
-        );
+        {
+          const step1Object = {
+            email: data.email,
+            compURLs: data.url,
+            name: null,
+            company: null,
+            growthGoal: null,
+            revenueGoal: null,
+            estGrowthBudget: null,
+          };
+          sendToZapier(
+            "https://hooks.zapier.com/hooks/catch/356942/2sk0oqt/",
+            step1Object,
+            1,
+            setTab
+          );
 
-        // Fire Facebook Pixel Lead event when Step 1 form is submitted
-        fbq("track", "Lead scraper"); // This will fire the "Lead" event
-        break;
+          // Fire Facebook Pixel Lead event when Step 1 form is submitted
+          fbq("track", "Lead scraper"); // This will fire the "Lead" event
+          break;
+        }
       case 1:
-        const step2Object = {
-          email: data.email,
-          compURLs: data.url,
-          name: data.name,
-          company: data.company,
-          growthGoal: data.goal,
-          revenueGoal: data.revenue,
-          estGrowthBudget: data.budget,
-        };
+        {
+          const step2Object = {
+            email: data.email,
+            compURLs: data.url,
+            name: data.name,
+            company: data.company,
+            growthGoal: data.goal,
+            revenueGoal: data.revenue,
+            estGrowthBudget: data.budget,
+          };
 
-        sendToZapier(
-          "https://hooks.zapier.com/hooks/catch/356942/2sk0oqt/",
-          step2Object,
-          2,
-          setTab
-        );
+          sendToZapier(
+            "https://hooks.zapier.com/hooks/catch/356942/2sk0oqt/",
+            step2Object,
+            2,
+            setTab
+          );
 
-        // Fire Facebook Pixel CompleteRegistration event when Step 2 form is submitted
-        fbq("track", "Details scraper");
+          // Fire Facebook Pixel CompleteRegistration event when Step 2 form is submitted
+          fbq("track", "Details scraper");
 
-        break;
+          break;
+        }
       default:
         break;
     }
