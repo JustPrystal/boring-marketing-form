@@ -6,8 +6,28 @@
   <link rel="icon" type="image/svg+xml" href="/boring-marketing-form/vite.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vite + React</title>
-  <script type="module" crossorigin src="/boring-marketing-form/assets/index-C9aDq_JY.js"></script>
-  <link rel="stylesheet" crossorigin href="/boring-marketing-form/assets/index-Bmob2hma.css">
+
+  <!-- Facebook Pixel Code -->
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '7056652834344742');
+  fbq('track', 'PageView');
+</script>
+
+<!-- <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script> -->
+
+<!-- End Facebook Pixel Code -->  
+
+
+  <script type="module" crossorigin src="/boring-marketing-form/assets/index.js"></script>
+  <link rel="stylesheet" crossorigin href="/boring-marketing-form/assets/index.css">
 </head>
 
 <body>
@@ -16,6 +36,12 @@
   <div id="keyword-ranking-root"></div>
   <div id="toolkit-root"></div>
   <div id="seo-course-form-root"></div>
+  <script>
+
+    Calendly.initInlineWidget({
+     "url": 'https://calendly.com/boringmarketing/boringmarketing-com-30min-demo-call',
+});
+</script>
 </body>
 
 </html>
